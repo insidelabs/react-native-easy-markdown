@@ -14,23 +14,6 @@ import styles from './styles';
 import Utils from './Utils';
 
 class Markdown extends Component {
-    static propTypes = {
-        debug: PropTypes.bool,
-        parseInline: PropTypes.bool,
-        markdownStyles: PropTypes.object,
-        useDefaultStyles: PropTypes.bool,
-        renderImage: PropTypes.func,
-        renderLink: PropTypes.func,
-        renderListBullet: PropTypes.func,
-    }
-
-    static defaultProps = {
-        debug: false,
-        useDefaultStyles: true,
-        parseInline: false,
-        markdownStyles: {}
-    }
-
     constructor(props) {
         super(props);
 
@@ -42,7 +25,7 @@ class Markdown extends Component {
         const outputResult = this.reactOutput(parseTree);
 
         const defaultStyles = this.props.useDefaultStyles && styles ? styles : {};
-        const _styles = StyleSheet.create(Object.assign(defaultStyles, this.props.markdownStyles));
+        const _styles = StyleSheet.create(Object.assign({}, defaultStyles, this.props.markdownStyles));
 
         this.state = {
             syntaxTree: outputResult,
@@ -130,12 +113,14 @@ class Markdown extends Component {
 
         let children = this.renderNodes(node.props.children, key, extras);
 
+        const SafeWrapper = Utils.isTextOnly(children) ? Text : View;
+
         return (
             <View style={styles.listItem} key={'listItem_' + key}>
                 {this.props.renderListBullet ? this.props.renderListBullet(extras.ordered, index) : this.renderListBullet(extras.ordered, index)}
-                <View key={'listItemContent_' + key} style={styles.listItemContent}>
+                <SafeWrapper key={'listItemContent_' + key} style={styles.listItemContent}>
                     {children}
-                </View>
+                </SafeWrapper>
             </View>
         );
     }
@@ -169,10 +154,12 @@ class Markdown extends Component {
             return this.props.renderLink(node.props.href, node.props.title, children);
         }
 
+        const SafeWrapper = Utils.isTextOnly(children) ? Text : TouchableOpacity;
+
         return (
-            <TouchableOpacity style={styles.linkWrapper} key={'linkWrapper_' + key} onPress={() => Linking.openURL(node.props.href).catch(() => { })}>
+            <SafeWrapper style={styles.linkWrapper} key={'linkWrapper_' + key} onPress={() => Linking.openURL(node.props.href).catch(() => { })}>
                 {children}
-            </TouchableOpacity>
+            </SafeWrapper>
         );
     }
 
@@ -221,6 +208,11 @@ class Markdown extends Component {
                 <View key={'blockQuote_' + key} style={[styles.block, styles.blockQuote]}>
                     <Text>{nodes}</Text>
                 </View>
+            );
+        }
+        else if (Utils.isTextOnly(nodes)) {
+            return (
+                <Text key={`block_text_` + key} style={styles.block}>{nodes}</Text>
             );
         }
         else {
@@ -297,5 +289,22 @@ class Markdown extends Component {
         );
     }
 }
+
+Markdown.propTypes = {
+    debug: PropTypes.bool,
+    parseInline: PropTypes.bool,
+    markdownStyles: PropTypes.object,
+    useDefaultStyles: PropTypes.bool,
+    renderImage: PropTypes.func,
+    renderLink: PropTypes.func,
+    renderListBullet: PropTypes.func,
+};
+
+Markdown.defaultProps = {
+    debug: false,
+    useDefaultStyles: true,
+    parseInline: false,
+    markdownStyles: {}
+};
 
 export default Markdown;
