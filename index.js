@@ -33,7 +33,7 @@ class Markdown extends Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
 
         let newState = {};
 
