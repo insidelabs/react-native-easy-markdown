@@ -157,7 +157,13 @@ class Markdown extends Component {
         const SafeWrapper = Utils.isTextOnly(children) ? Text : TouchableOpacity;
 
         return (
-            <SafeWrapper style={styles.linkWrapper} key={'linkWrapper_' + key} onPress={() => Linking.openURL(node.props.href).catch(() => { })}>
+            <SafeWrapper style={styles.linkWrapper} key={'linkWrapper_' + key} onPress={() => {
+                if (this.props.handleLink) {
+                    this.props.handleLink(node.props.href)
+                }else {
+                    Linking.openURL(node.props.href).catch(() => { })
+                }
+            }}>
                 {children}
             </SafeWrapper>
         );
@@ -297,6 +303,7 @@ Markdown.propTypes = {
     useDefaultStyles: PropTypes.bool,
     renderImage: PropTypes.func,
     renderLink: PropTypes.func,
+    handleLink: PropTypes.func,
     renderListBullet: PropTypes.func,
 };
 
