@@ -264,7 +264,7 @@ class Markdown extends Component {
             case 'img': return this.renderImage(node, key);
             case 'strong': return this.renderText(node, key, Utils.concatStyles(extras, styles.strong));
             case 'stronga': return this.renderStrongLink(node, key, Utils.concatStyles(extras, styles.strong));
-            case 'del': return this.renderText(this.renderLink(node, key), key, Utils.concatStyles(extras, styles.del));
+            case 'del': return this.renderText(node, key, Utils.concatStyles(extras, styles.del));
             case 'em': return this.renderText(node, key, Utils.concatStyles(extras, styles.em));
             case 'u': return this.renderText(node, key, Utils.concatStyles(extras, styles.u));
             case 'blockquote': return this.renderBlockQuote(node, key);
