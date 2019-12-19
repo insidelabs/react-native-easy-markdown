@@ -1,5 +1,5 @@
-import React from "react";
-import { StyleProp, TextStyle, ViewProps, ViewStyle } from "react-native";
+import React from 'react';
+import { StyleProp, TextStyle, ViewProps, ViewStyle } from 'react-native';
 
 export interface IProps {
     debug?: boolean;
@@ -8,6 +8,7 @@ export interface IProps {
     renderImage?: (src: string, alt: string, title: string) => React.ReactNode;
     renderLink?: (href: string, title: string, children: React.ReactNode) => React.ReactNode;
     renderListBullet?: (ordered: boolean, index: number) => React.ReactNode;
+    handleLink?: (href: string) => void;
     markdownStyles?: {
         block?: StyleProp<ViewStyle>;
         blockQuote?: StyleProp<TextStyle>;
